@@ -1,5 +1,7 @@
 import os
 import csv
+import subprocess
+import glob
 from transliterate import translit
 
 # создание кастомного словаря
@@ -57,70 +59,119 @@ from transliterate import get_available_language_codes, translit
 '''
 
 #интерактивное меню
-while True:
-    print ('выберите принтер для генерации наклеек \n\
-    1) Q-710\n\
-    2) Q-810')
-    sf = input()# print (sf)
-    if sf == '1' or sf == '2':
-        break
 
-if sf == '1':
-        sxmlfold = '710'
-if sf == '2':
-        sxmlfold = '810'
-# print( sxmlfold )
+def menu_1(dict_1,question):
+    while True:
+        print (question)
+        for id_dict_1 in dict_1.keys():
+            print("\t" + str(id_dict_1) + ")",dict_1[id_dict_1])
+        read = input()
+        if read in dict_1.keys():
+            break
+    val=dict_1[read]
+    return(val)
 
-while True:
-    print ('выберите наклейку \n\
-    1) Music Lines RPI QR\n\
-    2) Vision Lines no QR\n\
-    3) Music Lines Android QR\n\
-    4) Music Lines Adndroid QR no contact\n\
-    5) Music+Vision Table Android QR\n\
-    6) Music Table Android QR\n\
-    7) Vision Table no QR\n\
-    8) Music Table CMA QR')
-    uf = input()
-# print (sf)
-    if uf == '1' \
-    or uf == '2' or uf == '3' or uf == '4' or uf == '5' or uf == '6' or uf == '7' or uf == '8':
-        break
+def menu_2(dict_2,question_2):
+    while True:
+        print (question_2)
+        for id_dict_2 in dict_2.keys():
+            print ("\t"+str(id_dict_2)+') '+ dict_2[id_dict_2][1]) 
+        read_2 = input()
+        if read_2 in dict_2.keys():
+            break
+    val_2 = dict_2[read_2][0]
+    return(val_2)
 
-if uf == '1':
-    lfld = 'LABEL'
-if uf == '2':
-    lfld = 'LABEL_VISION'
-if uf == '3':
-    lfld = 'LABEL_ANDROID_MUSIC'
-if uf == '4':
-    lfld = 'LABEL_ANDROID_MUSIC_NO_CONTACT'
-if uf == '5':
-    lfld = 'LABEL_ANDROID_MUSIC_VISION_TABLE'
-if uf == '6':
-    lfld = 'LABEL_ANDROID_MUSIC_TABLE'
-if uf == '7':
-    lfld = 'LABEL_ANDROID_VISION_TABLE'
-if uf == '8':
-    lfld = 'LABEL_MUSIC_CMA_TABLE'
-    
-    
-    
-     
+def get_id_2(dict_2_,val_2_):
+    for item in dict_2_.keys():
+        if dict_2_[item][0] == val_2_:
+            return(item)
+
+#проверка, где запущен скрипт
+run_host = subprocess.run(['hostname'], capture_output=True, text=True)
+hst = str(run_host.stdout)
+print ("запущено на хосте")
+print (hst)
+
+if "RMP-DEBIAN-TECHNO-SHARA" in hst:
+    d_path = './'
+elif "RMP-STEND-CUBICMEDIA" in hst:
+    d_path = '/mnt/vpnsh/'
+elif "octopus2" in hst:
+    d_path = '/mnt/vpnsh/'
+else: d_path = './'
+
+files = sorted(glob.glob(d_path + '*.csv'))
+i=1
+dict_files={}
+for file in files:
+    dict_files[str(i)]=file
+    i+=1
+#print(dict_files)
 
 
-zipff = " ./label.xml /opt/"+lfld+"/"+sxmlfold+"/*"
+#Выбор файла CSV
+csv_path=menu_1(dict_files,'найдены файлы csv,выберите файл:')
 
-#if uf in [1,2]:
+#выбор принтера
+#словарь
+dict_prnt={
+            '1':['710','Q-710'],
+            '2':['810','Q-810']
+            } 
+prnt_fold=menu_2(dict_prnt,'выберите принтер:')
 
-while True:
-    print ('выберите режим \n\
-    1) DHCP\n\
-    2) STATIC')
-    st = input()
-    # print (sf)
-    if st == '1' or st == '2':
-        break
+#выбор типа наклейки
+dict_service={
+            '1':'Music',
+            '2':'Vision',
+            '3':'Music+Vision'
+            } 
+service=menu_1(dict_service,'выберите сервис:')
+
+
+#Выбор наклейки
+
+dict_label_dir_m={
+            '1':['LABEL','Music Lines RPI QR'],
+            '3':['LABEL_ANDROID_MUSIC','Music Lines Android QR'],
+            '4':['LABEL_ANDROID_MUSIC_NO_CONTACT','Music Lines Adndroid QR no contact'],
+            '6':['LABEL_ANDROID_MUSIC_TABLE','Music Table Android QR'],
+            '8':['LABEL_MUSIC_CMA_TABLE','Music Table CMA QR']
+            }  
+
+dict_label_dir_v={
+            '2':['LABEL_VISION','Vision Lines no QR'],
+            '7':['LABEL_ANDROID_VISION_TABLE','Vision Table no QR']
+            } 
+
+dict_label_dir_mv={
+            '5':['LABEL_ANDROID_MUSIC_VISION_TABLE','Music+Vision Table Android QR']
+            } 
+
+if service in 'Music':
+     dict_label_dir=dict_label_dir_m
+elif service in 'Vision':
+     dict_label_dir=dict_label_dir_v
+elif service in 'Music+Vision':
+     dict_label_dir=dict_label_dir_mv
+
+#выбор наклейки
+label_fold=menu_2(dict_label_dir,'выберите наклейку:')
+label_id=get_id_2(dict_label_dir,label_fold)
+
+
+zipff = " ./label.xml /opt/"+label_fold+"/"+prnt_fold+"/*"
+
+#if label_id in [1,2]:
+
+#режим
+dict_rezh={
+            '1':'DHCP',
+            '2':'STATIC'
+            } 
+
+rezhim=menu_1(dict_rezh,'выберите режим:')
 
 '''
 #if st == '1' :
@@ -130,25 +181,28 @@ while True:
 #    static=" "+l[7]+" "+l[8]+" "+l[9]+" "+l[10]+" "+l[11]+" "+l[12]+" "+l[13]
 #    print (static)
 '''
+
+#Заголовок ansible hosts
+dict_zagol={
+            '1':'RASPBERRY',
+            '2':'BUSTER'
+            }
+
 while True:
-    print ('выберите оглавление в hosts файле ansible \n\
-    1) RASPBERRY\n\
-    2) BUSTER')
-    za = input()
-    # print (sf)
-    if za == '1' or za == '2':
-        break
-
-if za == '1':
-    zag = 'RASPBERRY'
-if za == '2':
-    zag = 'BUSTER'
-
+    print ('выберите оглавление в hosts файле ansible:')
+    for id_zag in dict_zagol.keys():
+        print ("\t"+str(id_zag)+") "+dict_zagol[id_zag]) 
+    zag_k = input()
+    if zag_k in dict_zagol.keys():
+        break       
+zagolovok_ans = dict_zagol[zag_k]
 
 #изменение файла labels подменой
 #открытие файла на чтение
 #labcsv = open('./labels_1.csv', 'rt', encoding='utf-8-sig')
-csv_path = './labels.csv'
+
+
+#csv_path = './labels_1.csv'
 # csv=labcsv.read()
 # print(csv)
 
@@ -158,14 +212,15 @@ os.system("rm hosts")
 os.system("touch list.txt")
 os.system("touch hosts")
 
-#добавление заголовка в hosts файл
+#добавление заголовка в hosts файл ansible
 hosts_ = open('./hosts', "a")
-hosts_.write('\n' + "[" + zag + "]" + '\n' + '\n')
+hosts_.write('\n' + "[" + zagolovok_ans + "]" + '\n' + '\n')
 hosts_.close()
 
 # читаем строки csv
 with open(csv_path, newline='', encoding='utf-8-sig') as csvfile:  
     reader = csv.DictReader(csvfile, delimiter=';')
+
     for row in reader:
 #вывод на экран данные для наклеек
         print (row['id'], \
@@ -224,9 +279,9 @@ with open(csv_path, newline='', encoding='utf-8-sig') as csvfile:
         date = row['date']
         timezone = row['time_zone']
         ansible_ssh_host = row['ansible_ssh_host']
-        if st == '1':
+        if rezhim == 'DHCP':
             static = ''
-        if st == '2':
+        if rezhim == 'STATIC':
             if not row['address']:
                 print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения address\n!!!!!!!!!!!!!!!!!!!!!!!!!")
             if not row['netmask_s']:
@@ -240,9 +295,9 @@ with open(csv_path, newline='', encoding='utf-8-sig') as csvfile:
             if not row['dnsnameserver2']:
                 print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения dnsnameserver2\n!!!!!!!!!!!!!!!!!!!!!!!!!")
             if not row['ntp1']:
-                print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения netmask_s\n!!!!!!!!!!!!!!!!!!!!!!!!!")
+                print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения ntp1\n!!!!!!!!!!!!!!!!!!!!!!!!!")
             if not row['ntp2']:
-                print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения netmask_s\n!!!!!!!!!!!!!!!!!!!!!!!!!")
+                print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения ntp2\n!!!!!!!!!!!!!!!!!!!!!!!!!")
     
             static = " address=" + row['address'] + \
             " netmask=" + row['netmask_s'] + \
@@ -312,7 +367,7 @@ with open(csv_path, newline='', encoding='utf-8-sig') as csvfile:
                      +tc_name_n
         tar_name_id = translit(tar_name_id, language_code = 'nosymbol').replace("---", "").replace("--", "")
 
-#Нормализация длины для наклеек 1-4
+#Нормализация длины для наклеек c id c 1 по 4
 # вычисление длины всей строки
         ltn = len(tar_name)
 #    print ("last",tar_name[ltn-1:ltn])
@@ -369,13 +424,13 @@ with open(csv_path, newline='', encoding='utf-8-sig') as csvfile:
         print ('лицензия:', license, '\n')
 
 # чтение XML
-        sxml = open('/opt/' + lfld + "/" + sxmlfold + '/L/label.xml', 'r')
+        sxml = open('/opt/' + label_fold + "/" + prnt_fold + '/L/label.xml', 'r')
 
         content = sxml.read()
 
 ##################################
 #ДЛЯ НАКЛЕЕК 1-4
-        if uf in ['1','2','3','4']:
+        if label_id in ['1','2','3','4']:
 # выбор того,что переименовать
             client_rename = "        SSSS       "
             point_rename = "           XXXX           "
@@ -396,7 +451,7 @@ with open(csv_path, newline='', encoding='utf-8-sig') as csvfile:
             txml.close()
             
 #Наклейки - таблички
-        if uf in ['5','6','7','8']:
+        if label_id in ['5','6','7','8']:
             
             client_rename = "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
             point_rename = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -421,7 +476,7 @@ with open(csv_path, newline='', encoding='utf-8-sig') as csvfile:
             txmlt.write(contentVT)
             txmlt.close()
         
-        
+ #создание архива (файла .lbx)       
     # zip ssss.lbx ./label.xml ./Object1.bmp ./prop.xml  ./Object0.bmp
     # sentence.replace(" ", "")
 
