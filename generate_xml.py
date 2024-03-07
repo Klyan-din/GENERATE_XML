@@ -13,15 +13,36 @@ class NOSYMBOLLanguagePack(TranslitLanguagePack):
     language_name = "nosym"
     mapping = (
 
-       '., {}/\\()?№;:%',
-       '--------------',
+       '., {}/\\()?№;:%$&\'',
+       '-----------------',
     )
 
 
 registry.register(NOSYMBOLLanguagePack)
-
 from transliterate import get_available_language_codes, translit
 'nosymbol' in get_available_language_codes()
+
+
+# создание кастомного словаря
+#from transliterate.discover import autodiscover
+#autodiscover()
+#from transliterate.base import TranslitLanguagePack, registry
+
+
+#class XMLSYMBOLLanguagePack(TranslitLanguagePack):
+#    language_code = "xmlsymbol"
+#    language_name = "xmlsym"
+#pre_processor_mapping = {
+#	u"&amp;": u"&",
+#}
+
+
+#registry.register(XMLSYMBOLLanguagePack)
+
+#from transliterate import get_available_language_codes, translit
+#'xmlsymbol' in get_available_language_codes()
+
+
 
 '''
 #texts = 'Ghbd,tn rfr l/tk\.f()?:;'
@@ -52,16 +73,21 @@ if sf == '2':
 			
 # print( sxmlfold )
 while True:
-	print ('выберите наклейку \n    1) Music\n    2) Vision')
+	print ('выберите наклейку \n    1) Music\n    2) Vision\n    3) Music Android\n    4) Music Adndroid no contact')
 	uf = input()
 # print (sf)
-	if uf == '1' or uf == '2':
+	if uf == '1' or uf == '2' or uf == '3' or uf == '4':
 		break
 
 if uf == '1':
     lfld = 'LABEL'
 if uf == '2':
     lfld = 'LABEL_VISION'
+if uf == '3':
+    lfld = 'LABEL_ANDROID_MUSIC'
+if uf == '4':
+    lfld = 'LABEL_ANDROID_MUSIC_NO_CONTACT'
+
 
 zipff = " ./label.xml /opt/"+lfld+"/"+sxmlfold+"/*"
 
@@ -94,8 +120,8 @@ if za == '2':
 
 
 # открытие файла на чтение
-labcsv = open('./labels_1.csv', 'rt', encoding='utf-8-sig')
-csv_path = './labels_2.csv'
+#labcsv = open('./labels_1.csv', 'rt', encoding='utf-8-sig')
+csv_path = './labels.csv'
 # csv=labcsv.read()
 # print(csv)
 
@@ -138,7 +164,7 @@ with open(csv_path, newline='', encoding='utf-8-sig') as csvfile:
 		if not row['ansible_ssh_host']:
 				print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения ansible_ssh_host\n!!!!!!!!!!!!!!!!!!!!!!!!!")
 
-    
+		pleer_id = row['id']   
 		client_name = row['name_1_org']
 		point_name = row['name_2_city']
 		address_name = row['name_3_street']
@@ -218,6 +244,8 @@ with open(csv_path, newline='', encoding='utf-8-sig') as csvfile:
 # формирование имени архива и vpn строки
 		tar_name = client_name_n+" "+point_name_n+" "+address_name_n+" "+tc_name_n
 		tar_name = translit(tar_name, language_code = 'nosymbol').replace("---", "").replace("--", "")
+		tar_name_id = pleer_id+" "+client_name_n+" "+point_name_n+" "+address_name_n+" "+tc_name_n
+		tar_name_id = translit(tar_name_id, language_code = 'nosymbol').replace("---", "").replace("--", "")
 
 
 # вычисление длины всей строки
@@ -231,7 +259,7 @@ with open(csv_path, newline='', encoding='utf-8-sig') as csvfile:
 		else:
 			tar_name = tar_name
 			
-		print ("TARNAME, наклейка - без транслитерации:", tar_name)			
+		print ("TARNAME, наклейка - без транслитерации:", tar_name, tar_name_id)			
 			
  #     print ("notrim")
 
@@ -275,12 +303,11 @@ with open(csv_path, newline='', encoding='utf-8-sig') as csvfile:
 		content = sxml.read()
 
     ##################################
-    # print(content)
-
-		contentS = content.replace(client_rename, client_name_nn)
-		contentX = contentS.replace(point_rename, point_name_nn)
-		contentY = contentX.replace(address_rename, address_name_nn)
-		contentZ = contentY.replace(tc_rename, tc_name_nn)
+         
+		contentS = content.replace(client_rename, client_name_nn).replace('&', '&amp;')
+		contentX = contentS.replace(point_rename, point_name_nn).replace('&', '&amp;')
+		contentY = contentX.replace(address_rename, address_name_nn).replace('&', '&amp;')
+		contentZ = contentY.replace(tc_rename, tc_name_nn).replace('&', '&amp;')
 
 		txml = open('./label.xml', "w+")
 
@@ -291,7 +318,7 @@ with open(csv_path, newline='', encoding='utf-8-sig') as csvfile:
 
 
 #    zipf="zip -j "+ tar_name + ".lbx ./label.xml /opt/LABEL/Object1.bmp /opt/LABEL/prop.xml /opt/LABEL/Object0.bmp"
-		zipf = "zip -j " + tar_name + ".lbx " + zipff
+		zipf = "zip -j " + tar_name_id + ".lbx " + zipff
 		os.system(zipf)
 		print("\n")
 
@@ -314,7 +341,8 @@ listn.close()
 # print (lines)
 
 # !echo {tar_name}
-labcsv.close()
+#labcsv.close()
+csvfile.close()
 # удаляем модифицированный lanbel.xml
 os.system('rm ./label.xml')
 # f.close()
