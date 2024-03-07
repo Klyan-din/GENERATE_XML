@@ -55,37 +55,29 @@ from transliterate import get_available_language_codes, translit
 #sxml=open('/opt/LABEL/label.xml', 'r')
 #zipf="zip -j "+ tar_name + ".lbx ./label.xml /opt/LABEL/Object1.bmp /opt/LABEL/prop.xml /opt/LABEL/Object0.bmp"
 '''
-
-#интерактивное меню
 while True:
-    print ('выберите принтер для генерации наклеек \n\
-    1) Q-710\n\
-    2) Q-810')
-    sf = input()# print (sf)
-    if sf == '1' or sf == '2':
-        break
+	print ('выберите принтер для генерации наклеек \n    1) Q-710\n    2) Q-810')
+	sf = input()
+    # print (sf)
+	if sf == '1' or sf == '2':
+		break
+
+
 
 if sf == '1':
-        sxmlfold = '710'
+		sxmlfold = '710'
 if sf == '2':
-        sxmlfold = '810'
-# print( sxmlfold )
+		sxmlfold = '810'
 
+
+			
+# print( sxmlfold )
 while True:
-    print ('выберите наклейку \n\
-    1) Music Lines RPI QR\n\
-    2) Vision Lines no QR\n\
-    3) Music Lines Android QR\n\
-    4) Music Lines Adndroid QR no contact\n\
-    5) Music+Vision Table Android QR\n\
-    6) Music Table Android QR\n\
-    7) Vision Table no QR\n\
-    8) Music Table CMA QR')
-    uf = input()
+	print ('выберите наклейку \n    1) Music\n    2) Vision\n    3) Music Android')
+	uf = input()
 # print (sf)
-    if uf == '1' \
-    or uf == '2' or uf == '3' or uf == '4' or uf == '5' or uf == '6' or uf == '7' or uf == '8':
-        break
+	if uf == '1' or uf == '2' or uf == '3':
+		break
 
 if uf == '1':
     lfld = 'LABEL'
@@ -93,34 +85,15 @@ if uf == '2':
     lfld = 'LABEL_VISION'
 if uf == '3':
     lfld = 'LABEL_ANDROID_MUSIC'
-if uf == '4':
-    lfld = 'LABEL_ANDROID_MUSIC_NO_CONTACT'
-if uf == '5':
-    lfld = 'LABEL_ANDROID_MUSIC_VISION_TABLE'
-if uf == '6':
-    lfld = 'LABEL_ANDROID_MUSIC_TABLE'
-if uf == '7':
-    lfld = 'LABEL_ANDROID_VISION_TABLE'
-if uf == '8':
-    lfld = 'LABEL_MUSIC_CMA_TABLE'
-    
-    
-    
-     
-
 
 zipff = " ./label.xml /opt/"+lfld+"/"+sxmlfold+"/*"
 
-#if uf in [1,2]:
-
 while True:
-    print ('выберите режим \n\
-    1) DHCP\n\
-    2) STATIC')
-    st = input()
-    # print (sf)
-    if st == '1' or st == '2':
-        break
+	print ('выберите режим \n    1) DHCP\n    2) STATIC')
+	st = input()
+	# print (sf)
+	if st == '1' or st == '2':
+		break
 
 '''
 #if st == '1' :
@@ -131,13 +104,11 @@ while True:
 #    print (static)
 '''
 while True:
-    print ('выберите оглавление в hosts файле ansible \n\
-    1) RASPBERRY\n\
-    2) BUSTER')
-    za = input()
-    # print (sf)
-    if za == '1' or za == '2':
-        break
+	print ('выберите оглавление в hosts файле ansible \n    1) RASPBERRY\n    2) BUSTER')
+	za = input()
+	# print (sf)
+	if za == '1' or za == '2':
+		break
 
 if za == '1':
     zag = 'RASPBERRY'
@@ -145,8 +116,7 @@ if za == '2':
     zag = 'BUSTER'
 
 
-#изменение файла labels подменой
-#открытие файла на чтение
+# открытие файла на чтение
 #labcsv = open('./labels_1.csv', 'rt', encoding='utf-8-sig')
 csv_path = './labels.csv'
 # csv=labcsv.read()
@@ -158,35 +128,20 @@ os.system("rm hosts")
 os.system("touch list.txt")
 os.system("touch hosts")
 
-#добавление заголовка в hosts файл
 hosts_ = open('./hosts', "a")
 hosts_.write('\n' + "[" + zag + "]" + '\n' + '\n')
 hosts_.close()
 
 # читаем строки csv
-with open(csv_path, newline='', encoding='utf-8-sig') as csvfile:  
-    reader = csv.DictReader(csvfile, delimiter=';')
-    for row in reader:
-#вывод на экран данные для наклеек
-        print (row['id'], \
-        row['name_1_org'], \
-        row['name_2_city'], \
-        row['name_3_street'], \
-        row['name_4_tc'], '\n' ,\
-        row['org_music'], \
-        row['id_music'], \
-        row['id_vision'],'\n')
 
-        #, row['license'],\
-#        row['time_zone'],\
-#        row['address'],\
-#        row['netmask_s'],\
-#        row['netmask'],\
-#        row['gateway'],\
-#        row['dnsnameserver1'],\
-#        row['dnsnameserver2'],\
-#        row['ntp1'],\
-#        row['ntp2'])
+
+with open(csv_path, newline='', encoding='utf-8-sig') as csvfile:  
+	reader = csv.DictReader(csvfile, delimiter=';')
+	for row in reader:
+		print (row['id'], row['name_1_org'], row['name_2_city'], row['name_3_street'], row['name_4_tc'])
+		#, row['license'], row['time_zone'], row['address'], row['netmask_s'], row['netmask'], row['gateway'], row['dnsnameserver1'], row['dnsnameserver2'],row['ntp1'], row['ntp2'])
+
+
 
 #for line in labcsv:
 #    l = [line.strip() for line in line.split(';')]
@@ -199,136 +154,108 @@ with open(csv_path, newline='', encoding='utf-8-sig') as csvfile:
 #    tc_name = l[4]
 #    license = l[5]
 #    timezone = l[6]
-        if not row['license']:
-                print("!!!!!!!!!!!!!!!!!!!!!!!!!\n\
-                !!!!не указаны значения license\n\
-                !!!!!!!!!!!!!!!!!!!!!!!!!\n")
-        if not row['time_zone']:
-                print("!!!!!!!!!!!!!!!!!!!!!!!!!\n\
-                !!!!не указаны значения time_zone\n\
-                !!!!!!!!!!!!!!!!!!!!!!!!!\n")
-        if not row['ansible_ssh_host']:
-                print("!!!!!!!!!!!!!!!!!!!!!!!!!\n\
-                !!!!не указаны значения ansible_ssh_host\n\
-                !!!!!!!!!!!!!!!!!!!!!!!!!\n")
+		if not row['license']:
+				print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения license\n!!!!!!!!!!!!!!!!!!!!!!!!!")
+		if not row['time_zone']:
+				print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения time_zone\n!!!!!!!!!!!!!!!!!!!!!!!!!")
+		if not row['ansible_ssh_host']:
+				print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения ansible_ssh_host\n!!!!!!!!!!!!!!!!!!!!!!!!!")
 
-        pleer_id = row['id']
-        client_name = row['name_1_org']
-        point_name = row['name_2_city']
-        address_name = row['name_3_street']
-        tc_name = row['name_4_tc']
-        org_music = row['org_music']
-        id_music = row['id_music']
-        id_vision = row['id_vision']
-        license = row['license']
-        date = row['date']
-        timezone = row['time_zone']
-        ansible_ssh_host = row['ansible_ssh_host']
-        if st == '1':
-            static = ''
-        if st == '2':
-            if not row['address']:
-                print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения address\n!!!!!!!!!!!!!!!!!!!!!!!!!")
-            if not row['netmask_s']:
-                print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения netmask_s\n!!!!!!!!!!!!!!!!!!!!!!!!!")
-            if not row['netmask']:
-                print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения netmask\n!!!!!!!!!!!!!!!!!!!!!!!!!")
-            if not row['gateway']:
-                print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения gateway\n!!!!!!!!!!!!!!!!!!!!!!!!!")
-            if not row['dnsnameserver1']:
-                print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения dnsnameserver1\n!!!!!!!!!!!!!!!!!!!!!!!!!")
-            if not row['dnsnameserver2']:
-                print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения dnsnameserver2\n!!!!!!!!!!!!!!!!!!!!!!!!!")
-            if not row['ntp1']:
-                print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения netmask_s\n!!!!!!!!!!!!!!!!!!!!!!!!!")
-            if not row['ntp2']:
-                print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения netmask_s\n!!!!!!!!!!!!!!!!!!!!!!!!!")
     
-            static = " address=" + row['address'] + \
-            " netmask=" + row['netmask_s'] + \
-            " gateway=" + row['gateway'] + \
-            " dnsnameserver1=" + row['dnsnameserver1'] + \
-            " dnsnameserver2=" + row['dnsnameserver2'] + \
-            " ntp1=" + row['ntp1'] + \
-            " ntp2=" + row['ntp2']
-            
+		client_name = row['name_1_org']
+		point_name = row['name_2_city']
+		address_name = row['name_3_street']
+		tc_name = row['name_4_tc']
+		license = row['license']
+		timezone = row['time_zone']
+		ansible_ssh_host = row['ansible_ssh_host']
+		if st == '1':
+			static = ''
+		if st == '2':
+			if not row['address']:
+				print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения address\n!!!!!!!!!!!!!!!!!!!!!!!!!")
+			if not row['netmask_s']:
+				print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения netmask_s\n!!!!!!!!!!!!!!!!!!!!!!!!!")
+			if not row['netmask']:
+				print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения netmask\n!!!!!!!!!!!!!!!!!!!!!!!!!")
+			if not row['gateway']:
+				print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения gateway\n!!!!!!!!!!!!!!!!!!!!!!!!!")
+			if not row['dnsnameserver1']:
+				print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения dnsnameserver1\n!!!!!!!!!!!!!!!!!!!!!!!!!")
+			if not row['dnsnameserver2']:
+				print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения dnsnameserver2\n!!!!!!!!!!!!!!!!!!!!!!!!!")
+			if not row['ntp1']:
+				print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения netmask_s\n!!!!!!!!!!!!!!!!!!!!!!!!!")
+			if not row['ntp2']:
+				print("!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!не указаны значения netmask_s\n!!!!!!!!!!!!!!!!!!!!!!!!!")												
+				
+			static = " address=" + row['address'] + " netmask=" + row['netmask_s'] + " gateway=" + row['gateway'] + " dnsnameserver1=" + row['dnsnameserver1'] + " dnsnameserver2=" + row['dnsnameserver2'] + " ntp1=" + row['ntp1'] + " ntp2=" + row['ntp2']
+#    static = sta
+#    print (static)
+# +"["+l[0]+"]"
 
-        '''
-        string1="Test String Trailing space to be added"
-        string_length=len(string1)+10    # will be adding 10 extra spaces
-        string_revised=string1.ljust(string_length)
-        print string_revised
-        '''
-
+		'''
+		string1="Test String Trailing space to be added"
+		string_length=len(string1)+10    # will be adding 10 extra spaces
+		string_revised=string1.ljust(string_length)
+		print string_revised
+		'''
 # выбор того,что переименовать
-        client_rename = "        SSSS       "
-        point_rename = "           XXXX           "
-        address_rename = "           YYYY           "
-        tc_rename = "           ZZZZ           "
+		client_rename = "        SSSS       "
+		point_rename = "           XXXX           "
+		address_rename = "           YYYY           "
+		tc_rename = "           ZZZZ           "
 
 # вычисление длины образцов переименовываемых строк
-        lss = len(client_rename)
-        lxx = len(point_rename)
-        lyy = len(address_rename)
-        lzz = len(tc_rename)
+		lss = len(client_rename)
+		lxx = len(point_rename)
+		lyy = len(address_rename)
+		lzz = len(tc_rename)
 # Получение длины переименовываемых строк 
-        lssi = len(client_name)
-        lxxi = len(point_name)
-        lyyi = len(address_name)
-        lzzi = len(tc_name)	
+		lssi = len(client_name)
+		lxxi = len(point_name)
+		lyyi = len(address_name)
+		lzzi = len(tc_name)	
 # Вывод сообщения о превышении длины	
-        if lssi > lss:
-            print ( 'название:', client_name, 'в столбце "name_1_org" обрежется в строке наклейки')
-        if lxxi > lxx:
-            print ( 'название:', point_name, 'в столбце "name_2_city" обрежется в строке наклейки')	
-        if lyyi > lyy:
-            print ( 'название:', address_name, 'в столбце "name_3_street" обрежется в строке наклейки')
-        if lzzi > lzz:
-            print ( 'название:', tc_name, 'в столбце "name_4_tc" обрежется в строке наклейки')
-            
-        
+		if lssi > lss:
+			print ( 'название:', client_name, 'в столбце "name_1_org" обрежется в строке наклейки')
+		if lxxi > lxx:
+			print ( 'название:', point_name, 'в столбце "name_2_city" обрежется в строке наклейки')	
+		if lyyi > lyy:
+			print ( 'название:', address_name, 'в столбце "name_3_street" обрежется в строке наклейки')
+		if lzzi > lzz:
+			print ( 'название:', tc_name, 'в столбце "name_4_tc" обрежется в строке наклейки')
+			
+		
 # обзезка по макс длине перименовываемой строки
-        client_name_n = client_name[:lss]
-        point_name_n = point_name[:lxx]
-        address_name_n = address_name[:lyy]
-        tc_name_n = tc_name[:lzz]
+		client_name_n = client_name[:lss]
+		point_name_n = point_name[:lxx]
+		address_name_n = address_name[:lyy]
+		tc_name_n = tc_name[:lzz]
 # добивка пробелами строки до длины переименовываемой строки
-        client_name_nn = client_name_n.ljust(lss)
-        point_name_nn = point_name_n.ljust(lxx)
-        address_name_nn = address_name_n.ljust(lyy)
-        tc_name_nn = tc_name_n.ljust(lzz)
+		client_name_nn = client_name_n.ljust(lss)
+		point_name_nn = point_name_n.ljust(lxx)
+		address_name_nn = address_name_n.ljust(lyy)
+		tc_name_nn = tc_name_n.ljust(lzz)
 
 # формирование имени архива и vpn строки
-        tar_name = client_name_n+" "\
-                   +point_name_n+" "\
-                   +address_name_n+" "\
-                   +tc_name_n
-        tar_name = translit(tar_name, language_code = 'nosymbol').replace("---", "").replace("--", "")
-        
-        tar_name_id = pleer_id+" "\
-                     +client_name_n+" "\
-                     +point_name_n+" "\
-                     +address_name_n+" "\
-                     +tc_name_n
-        tar_name_id = translit(tar_name_id, language_code = 'nosymbol').replace("---", "").replace("--", "")
+		tar_name = client_name_n+" "+point_name_n+" "+address_name_n+" "+tc_name_n
+		tar_name = translit(tar_name, language_code = 'nosymbol').replace("---", "").replace("--", "")
 
-#Нормализация длины для наклеек 1-4
+
 # вычисление длины всей строки
-        ltn = len(tar_name)
+		ltn = len(tar_name)
 #    print ("last",tar_name[ltn-1:ltn])
-        literal = tar_name[ltn-1:ltn]
+		literal = tar_name[ltn-1:ltn]
 # проверка на окончание "-"
-        if str(literal) == "-":
+		if str(literal) == "-":
 #       print ("trim")
-            tar_name = tar_name[:ltn-1]
-        else:
-            tar_name = tar_name
-            
-        print ('\n',\
-        'TARNAME, наклейка - без транслитерации:', \
-        tar_name, \
-        tar_name_id)
-            
+			tar_name = tar_name[:ltn-1]
+		else:
+			tar_name = tar_name
+			
+		print ("TARNAME, наклейка - без транслитерации:", tar_name)			
+			
  #     print ("notrim")
 
     # tar_name=tar_name.replace(" ", "")
@@ -340,96 +267,55 @@ with open(csv_path, newline='', encoding='utf-8-sig') as csvfile:
 #    print (tar_name)
 
 # заполнение строки list.txt, транслитерация замена апострофа
-        vpn_txt = translit(tar_name, language_code='ru', reversed=True).upper().replace("'", "").replace("TS", "C")
+		vpn_txt = translit(tar_name, language_code='ru', reversed=True).upper().replace("'", "").replace("TS", "C")
 
-        print ('hostname,vpn :', vpn_txt)
+		print ('hostname,vpn :', vpn_txt)
 
-        list = open('./list.txt', "a")
-        list.write(vpn_txt + '\n')
-        list.close()
+		list = open('./list.txt', "a")
+		list.write(vpn_txt + '\n')
+		list.close()
 
 #    vpnline="echo "+vpn_txt+" >> list.txt"
 #    os.system( vpnline )
 
 # заполнение строки ansible
 # ansibleline="echo "+vpn_txt+" ansible_ssh_host=192.168.88.ххх rmp_name="+vpn_txt+"  rmp_licence="+license+" timez="+timezone+" >> hosts"
-        ansibleline = vpn_txt + \
-        " ansible_ssh_host=" + ansible_ssh_host + \
-        " rmp_name=" + vpn_txt + \
-        " rmp_licence=" + license + \
-        " timez=" + timezone
+		ansibleline = vpn_txt + " ansible_ssh_host=" + ansible_ssh_host + " rmp_name=" + vpn_txt + "  rmp_licence=" + license + " timez=" + timezone
 
-#запись в hosts файл
-#hosts.write(ansibleline + '\n')
-        hosts = open('./hosts', "a")
-        hosts.write(ansibleline + static + '\n')
-        hosts.close()
+		hosts = open('./hosts', "a")
+#    hosts.write(ansibleline + '\n')
+		hosts.write(ansibleline + static + '\n')
+		hosts.close()
 
 #    os.system( ansibleline )
-        print ('лицензия:', license, '\n')
+		print ('лицензия:', license)
 
-# чтение XML
-        sxml = open('/opt/' + lfld + "/" + sxmlfold + '/L/label.xml', 'r')
+    # print( client_name )
 
-        content = sxml.read()
 
-##################################
-#ДЛЯ НАКЛЕЕК 1-4
-        if uf in ['1','2','3','4']:
-# выбор того,что переименовать
-            client_rename = "        SSSS       "
-            point_rename = "           XXXX           "
-            address_rename = "           YYYY           "
-            tc_rename = "           ZZZZ           "
-            date_rename = "**********"
+		sxml = open('/opt/' + lfld + "/" + sxmlfold + '/L/label.xml', 'r')
 
-            contentZ = content.replace(client_rename, client_name_nn)\
-            .replace(point_rename, point_name_nn)\
-            .replace(address_rename, address_name_nn)\
-            .replace(tc_rename, tc_name_nn)\
-            .replace(date_rename, date)\
-            .replace('&', '&amp;')
+		content = sxml.read()
 
-            txml = open('./label.xml', "w+")
+    ##################################
+         
+		contentS = content.replace(client_rename, client_name_nn).replace('&', '&amp;')
+		contentX = contentS.replace(point_rename, point_name_nn).replace('&', '&amp;')
+		contentY = contentX.replace(address_rename, address_name_nn).replace('&', '&amp;')
+		contentZ = contentY.replace(tc_rename, tc_name_nn).replace('&', '&amp;')
 
-            txml.write(contentZ)
-            txml.close()
-            
-#Наклейки - таблички
-        if uf in ['5','6','7','8']:
-            
-            client_rename = "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
-            point_rename = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-            address_rename = "YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY"
-            tc_rename = "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ"
-            music_org_rename = "OOOOOO"
-            music_id_rename = "IIIIII"
-            vision_id_rename = "VVVVVVVVVV"
-            date_rename = "**********"
-            
-            contentVT = content.replace(client_rename, client_name)\
-            .replace(point_rename, point_name)\
-            .replace(address_rename, address_name)\
-            .replace(tc_rename, tc_name)\
-            .replace(music_org_rename, org_music)\
-            .replace(music_id_rename, id_music)\
-            .replace(vision_id_rename, id_vision)\
-            .replace(date_rename, date)\
-            .replace('&', '&amp;')
+		txml = open('./label.xml', "w+")
 
-            txmlt = open('./label.xml', "w+")
-            txmlt.write(contentVT)
-            txmlt.close()
-        
-        
+		txml.write(contentZ)
+		txml.close()
     # zip ssss.lbx ./label.xml ./Object1.bmp ./prop.xml  ./Object0.bmp
     # sentence.replace(" ", "")
 
 
 #    zipf="zip -j "+ tar_name + ".lbx ./label.xml /opt/LABEL/Object1.bmp /opt/LABEL/prop.xml /opt/LABEL/Object0.bmp"
-
-        os.system("zip -j " + tar_name_id + ".lbx " + zipff)
-        print("\n")
+		zipf = "zip -j " + tar_name + ".lbx " + zipff
+		os.system(zipf)
+		print("\n")
 
 # хук-замена в последней строке файла list.txt символа перевода строки в конце файла
 # читаем и удаляем последний символ в памяти
